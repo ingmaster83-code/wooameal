@@ -8,3 +8,7 @@ Gemfile.lock
 __pycache__/
 
 .env
+
+# 원본 급식 수집 캐시는 처리 중간산물이라 git에 안 올림 (누적 시 100MB+ 로 GitHub 제한 초과,
+# process_data.py가 schools_*.json으로 가공한 결과물만 커밋 대상)
+_rawdata/meal_detail.json
