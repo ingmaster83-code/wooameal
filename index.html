@@ -1,0 +1,118 @@
+---
+layout: default
+title: 우아급식 - 전국 학교 급식 식단표
+description: 전국 12,000여 개 초중고 학교의 급식 식단표를 한 곳에서 확인하세요. 이번주 메뉴부터 칼로리·영양정보까지.
+---
+
+<div class="hero" id="search">
+  <h1>오늘 급식,<br><span class="accent">뭐 나올까?</span></h1>
+  <p>전국 12,000여 개 학교의 급식 식단표를<br>메뉴·칼로리·영양정보까지 한 곳에서 확인하세요.</p>
+
+  <div class="search-wrap">
+    <input type="text" class="search-input" id="searchInput" placeholder="학교 이름으로 검색 (예: 한강초등학교, OO중학교...)">
+    <button class="search-btn" id="searchBtn">🔍 검색</button>
+  </div>
+</div>
+
+<div id="search-results"></div>
+
+<div class="top-ad-bar">{% include ad.html %}</div>
+
+<div class="section" id="regionSection">
+  <h2 class="section-title">🗺️ 지역별로 찾기</h2>
+  <p class="section-sub">시도를 선택하면 시군구별 학교 목록을 볼 수 있어요.</p>
+  <div class="region-grid">
+    {% assign dos = site.data.school_by_do | sort %}
+    {% for pair in dos %}
+    <a class="region-btn" href="{{ '/region/' | relative_url }}{{ pair[0] }}/">
+      <span class="region-icon">📍</span>
+      {{ pair[0] }}
+      <div class="region-count">{{ pair[1].size }}곳</div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="section" style="padding-top:0;">
+  <div class="info-panel">
+    <h2>🍱 우아급식은 이런 정보를 제공해요</h2>
+    <p style="color:var(--text-muted);">나이스(NEIS) 교육정보 개방포털의 공공데이터를 바탕으로, 전국 초·중·고 학교의 급식 식단표를 학교별로 정리하고 있습니다. 날짜별 메뉴는 물론 칼로리·영양정보(탄수화물·단백질·지방 등)까지 함께 제공하며, 매주 자동으로 최신 정보를 갱신합니다.</p>
+  </div>
+</div>
+
+<div class="section" style="padding-top:0;">
+  <div class="tips-panel">
+    <h3>💡 Tips</h3>
+    <ul>
+      <li>학교명 전체를 몰라도 일부만 입력하면 검색돼요 (예: "한강초"만 검색).</li>
+      <li>같은 이름의 학교가 여러 지역에 있을 수 있으니 지역을 꼭 확인하세요.</li>
+      <li>급식정보가 "준비중"인 학교는 순차적으로 업데이트되고 있어요.</li>
+    </ul>
+  </div>
+  <div class="faq-section">
+    <h2>자주 묻는 질문</h2>
+    <details>
+      <summary>모든 학교의 급식 정보가 검색되나요?</summary>
+      <p>나이스(NEIS)에 급식 정보를 등록한 전국 초중고 학교를 대상으로 하며, 일부 미등록 학교는 정보가 없을 수 있습니다.</p>
+    </details>
+    <details>
+      <summary>급식 정보는 얼마나 자주 갱신되나요?</summary>
+      <p>학교별로 최근 약 2개월(지난 두 달~다가오는 두 달 반) 구간의 식단이 자동으로 매주 갱신됩니다.</p>
+    </details>
+    <details>
+      <summary>파일이나 개인정보가 서버에 저장되나요?</summary>
+      <p>아니요. 검색은 브라우저 안에서 처리되며 별도의 개인정보를 수집하지 않습니다.</p>
+    </details>
+  </div>
+</div>
+
+<script>
+var searchIndex = null;
+var fuse = null;
+
+function ensureFuseLoaded(cb) {
+  if (window.Fuse) return cb();
+  var s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js';
+  s.onload = cb;
+  document.head.appendChild(s);
+}
+
+function ensureIndexLoaded(cb) {
+  if (searchIndex) return cb();
+  fetch('{{ "/search_index.json" | relative_url }}').then(function(r){ return r.json(); }).then(function(data){
+    searchIndex = data;
+    cb();
+  });
+}
+
+function doSearch() {
+  var q = document.getElementById('searchInput').value.trim();
+  var resultsEl = document.getElementById('search-results');
+  if (!q) { resultsEl.innerHTML = ''; document.getElementById('regionSection').style.display = ''; return; }
+
+  ensureFuseLoaded(function () {
+    ensureIndexLoaded(function () {
+      if (!fuse) {
+        fuse = new Fuse(searchIndex, { keys: ['n'], threshold: 0.32, minMatchCharLength: 1 });
+      }
+      var hits = fuse.search(q).slice(0, 30);
+      document.getElementById('regionSection').style.display = 'none';
+      if (hits.length === 0) {
+        resultsEl.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:30px 0;">검색 결과가 없어요. 학교명을 다시 확인해보세요.</p>';
+        return;
+      }
+      resultsEl.innerHTML = hits.map(function (h) {
+        var s = h.item;
+        var badge = s.d ? '<span class="apt-card-badge badge-ready">급식정보 있음</span>' : '<span class="apt-card-badge badge-pending">준비중</span>';
+        return '<div class="search-result-item"><a href="{{ "/school/" | relative_url }}' + s.s + '/">' +
+          '<span><span class="search-result-name">' + s.n + '</span><br><span class="search-result-loc">' + s.do + ' ' + s.sg + ' · ' + s.k + '</span></span>' +
+          badge + '</a></div>';
+      }).join('');
+    });
+  });
+}
+
+document.getElementById('searchBtn').addEventListener('click', doSearch);
+document.getElementById('searchInput').addEventListener('keydown', function (e) { if (e.key === 'Enter') doSearch(); });
+</script>

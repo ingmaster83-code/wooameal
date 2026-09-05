@@ -1,0 +1,30 @@
+title: 우아급식 - 전국 학교 급식 식단표
+description: >-
+  전국 12,000여 개 초중고 학교의 급식 식단표를 한 곳에서 확인하세요.
+  이번주 메뉴부터 칼로리·영양정보까지.
+url: "https://wooameal.wooahouse.com"
+baseurl: ""
+lang: ko
+timezone: Asia/Seoul
+author: WooaHouse
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+
+plugins:
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - scripts/
+  - "*.py"
+  - "*.log"
+  - "*.txt"
+  - README.md
+  - .gitignore
+  - vendor/
+  - .env

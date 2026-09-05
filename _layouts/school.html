@@ -1,0 +1,123 @@
+---
+layout: default
+---
+<div class="school-hero">
+  <div class="s-name">{{ page.schoolName }}</div>
+  <div class="s-addr">{{ page.addr | default: page.doShort | append: ' ' | append: page.sigungu }}</div>
+  <span class="s-badge">{{ page.kind }}{% if page.coedu %} · {{ page.coedu }}{% endif %}</span>
+</div>
+
+<div class="breadcrumb">
+  <a href="{{ '/' | relative_url }}">홈</a> ›
+  <a href="{{ '/region/' | relative_url }}{{ page.doShort }}/">{{ page.doShort }}</a> ›
+  <a href="{{ '/region/' | relative_url }}{{ page.doShort }}/{{ page.sigungu }}/">{{ page.sigungu }}</a> ›
+  <span>{{ page.schoolName }}</span>
+</div>
+
+<div class="page-with-sidebar" style="margin-top:20px;">
+<div>
+
+  <div class="ad-slot" style="margin:0 0 20px;text-align:center;">{% include ad.html %}</div>
+
+  <div class="info-panel">
+    <h2>🍱 {{ page.schoolName }} 급식 식단표</h2>
+    {% if page.mealsByMonth.size > 0 %}
+    <div class="month-tabs" id="monthTabs">
+      {% for mg in page.mealsByMonth %}
+      <button class="month-tab{% if forloop.last %} active{% endif %}" data-ym="{{ mg.ym }}">{{ mg.ym | replace: '-', '년 ' }}월 ({{ mg.items.size }})</button>
+      {% endfor %}
+    </div>
+
+    {% for mg in page.mealsByMonth %}
+    <div class="month-panel" data-ym="{{ mg.ym }}" {% unless forloop.last %}style="display:none;"{% endunless %}>
+      {% for m in mg.items %}
+      <div class="meal-day-card">
+        <div class="meal-day-top">
+          <span class="meal-day-date">{{ m.d | slice: 0, 4 }}.{{ m.d | slice: 4, 2 }}.{{ m.d | slice: 6, 2 }}</span>
+          <span class="meal-day-type">{{ m.t }}</span>
+          {% if m.cal %}<span class="meal-cal">🔥 {{ m.cal }}</span>{% endif %}
+        </div>
+        <ul class="meal-dish-list">
+          {% assign dishes = m.m | split: "<br/>" %}
+          {% for dish in dishes %}<li>{{ dish | strip_newlines | strip }}</li>{% endfor %}
+        </ul>
+        {% if m.ntr %}
+        <span class="meal-ntr-toggle" onclick="this.nextElementSibling.classList.toggle('open')">영양정보 보기 ▾</span>
+        <div class="meal-ntr-detail">
+          {% assign ntrs = m.ntr | split: "<br/>" %}
+          {% for n in ntrs %}{{ n }}<br>{% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+
+    <script>
+    (function(){
+      var tabs = document.querySelectorAll('#monthTabs .month-tab');
+      var panels = document.querySelectorAll('.month-panel');
+      tabs.forEach(function(tab){
+        tab.addEventListener('click', function(){
+          var ym = tab.getAttribute('data-ym');
+          tabs.forEach(function(t){ t.classList.toggle('active', t === tab); });
+          panels.forEach(function(p){ p.style.display = (p.getAttribute('data-ym') === ym) ? '' : 'none'; });
+        });
+      });
+    })();
+    </script>
+    {% else %}
+    <div class="empty-box">
+      🍽️ 이 학교의 급식 식단표는 아직 준비 중이에요.<br>
+      나이스(NEIS) 공공데이터를 순차적으로 수집하고 있으며, 곧 확인하실 수 있어요.
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="info-panel">
+    <h2>🏫 학교 기본정보</h2>
+    <div class="spec-grid">
+      <div class="spec-item"><div class="spec-label">학교급</div><div class="spec-value">{{ page.kind }}</div></div>
+      {% if page.coedu %}<div class="spec-item"><div class="spec-label">남녀공학</div><div class="spec-value">{{ page.coedu }}</div></div>{% endif %}
+      {% if page.foundType %}<div class="spec-item"><div class="spec-label">설립유형</div><div class="spec-value">{{ page.foundType }}</div></div>{% endif %}
+      {% if page.foundYmd and page.foundYmd.size == 8 %}<div class="spec-item"><div class="spec-label">개교일</div><div class="spec-value">{{ page.foundYmd | slice: 0, 4 }}.{{ page.foundYmd | slice: 4, 2 }}.{{ page.foundYmd | slice: 6, 2 }}</div></div>{% endif %}
+      {% if page.tel and page.tel != "" %}<div class="spec-item"><div class="spec-label">전화번호</div><div class="spec-value">{{ page.tel }}</div></div>{% endif %}
+      {% if page.addr %}<div class="spec-item" style="grid-column:1/-1;"><div class="spec-label">주소</div><div class="spec-value">{{ page.addr }}</div></div>{% endif %}
+    </div>
+    {% if page.homepage and page.homepage != "" %}
+    <p style="margin-top:14px;"><a href="{% unless page.homepage contains 'http' %}http://{% endunless %}{{ page.homepage }}" target="_blank" rel="noopener">🔗 학교 홈페이지 바로가기</a></p>
+    {% endif %}
+  </div>
+
+  <div class="notice-box" style="margin-top:14px;">
+    💡 본 급식 정보는 나이스(NEIS) 교육정보 개방포털 공공데이터를 기반으로 하며, 학교 사정에 따라 실제와 다를 수 있습니다. 최신 정보는 학교에 확인해주세요.
+  </div>
+
+  <div class="tips-panel">
+    <h3>💡 Tips</h3>
+    <ul>
+      <li>급식 메뉴는 학교 사정(현장체험학습, 시험기간 등)에 따라 당일 변경될 수 있어요.</li>
+      <li>알레르기가 있다면 메뉴 옆 숫자(알레르기 유발 식품 표시번호)를 꼭 확인하세요.</li>
+      <li>이 페이지는 매주 자동으로 최신 급식 정보로 갱신돼요.</li>
+    </ul>
+  </div>
+
+  <div class="faq-section">
+    <h2>자주 묻는 질문</h2>
+    <details>
+      <summary>급식 메뉴가 매일 바뀌나요?</summary>
+      <p>네, 학교가 나이스(NEIS)에 등록한 식단을 기준으로 매일 다른 메뉴가 표시됩니다. 이 페이지는 최근 약 2개월 구간을 순차적으로 자동 갱신합니다.</p>
+    </details>
+    <details>
+      <summary>급식정보가 "준비중"으로 나와요.</summary>
+      <p>전국 1만2천여 개 학교의 급식 정보를 순차적으로 수집하고 있어요. 일부 학교는 나이스에 급식 정보를 등록하지 않는 경우도 있습니다.</p>
+    </details>
+    <details>
+      <summary>칼로리·영양정보는 정확한가요?</summary>
+      <p>학교 영양(교)사가 등록한 값을 그대로 보여드리며, 조리 과정에 따라 실제와 약간 차이가 있을 수 있습니다.</p>
+    </details>
+  </div>
+
+</div>
+<aside class="tool-sidebar"></aside>
+</div>
