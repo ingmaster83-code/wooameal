@@ -18,6 +18,13 @@ description: 전국 12,000여 개 초중고 학교의 급식 식단표를 한 �
 
 <div class="top-ad-bar">{% include ad.html %}</div>
 
+<div class="section" style="padding-bottom:0;">
+  <a href="{{ '/schedule/' | relative_url }}" class="info-panel" style="display:block;text-decoration:none;color:inherit;border-color:var(--primary);">
+    <h2 style="margin-bottom:6px;">📅 학교 방학·개학일 · 학사일정 <span style="font-size:.8rem;color:var(--primary);">NEW</span></h2>
+    <p style="color:var(--text-muted);line-height:1.7;margin:0;">우리 학교 여름방학·겨울방학·개학일·시험기간·재량휴업일을 학교별로 확인하세요. 지역별 방학 날짜 비교도 한눈에 →</p>
+  </a>
+</div>
+
 <div class="section" id="regionSection">
   <h2 class="section-title">🗺️ 지역별로 찾기</h2>
   <p class="section-sub">시도를 선택하면 시군구별 학교 목록을 볼 수 있어요.</p>
@@ -51,6 +58,10 @@ description: 전국 12,000여 개 초중고 학교의 급식 식단표를 한 �
   </div>
   <div class="faq-section">
     <h2>자주 묻는 질문</h2>
+    <details>
+      <summary>학교 방학·개학일, 시험기간은 어디서 보나요?</summary>
+      <p>학교 페이지의 "학사일정" 메뉴 또는 <a href="{{ '/schedule/' | relative_url }}">학사일정 페이지</a>에서 학교별 여름방학·겨울방학·개학일·시험기간·재량휴업일을 확인할 수 있어요.</p>
+    </details>
     <details>
       <summary>모든 학교의 급식 정보가 검색되나요?</summary>
       <p>나이스(NEIS)에 급식 정보를 등록한 전국 초중고 학교를 대상으로 하며, 일부 미등록 학교는 정보가 없을 수 있습니다.</p>

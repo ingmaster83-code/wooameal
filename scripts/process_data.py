@@ -19,6 +19,9 @@ sys.stdout.reconfigure(encoding="utf-8")
 ROOT = Path(__file__).parent.parent
 RAW_LIST = ROOT / "_rawdata" / "school_list_raw.json"
 RAW_MEAL = ROOT / "_rawdata" / "meal_detail.json"
+# 페이지 용량(GitHub Pages 1GB 한도) 때문에 과거 급식은 최근 21일만 노출 (오늘·이번주 검색이 대부분)
+from datetime import date, timedelta
+MEAL_KEEP_FROM = (date.today() - timedelta(days=21)).strftime("%Y%m%d")
 RAWDATA_DIR = ROOT / "_rawdata"
 SEARCH_INDEX_OUT = ROOT / "search_index.json"
 STATS_OUT = ROOT / "_rawdata" / "stats.json"
@@ -91,6 +94,8 @@ def main():
             slug = f"{slug}-{seen_slugs[slug]}"
 
         meals = meal_map.get(code)
+        if meals:
+            meals = [m for m in meals if (m.get("d") or "") >= MEAL_KEEP_FROM]
         has_meal = meals is not None
         schools.append({
             "code": code,

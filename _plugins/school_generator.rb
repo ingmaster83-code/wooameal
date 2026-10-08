@@ -38,6 +38,8 @@ module Jekyll
 
       site.data['school_all'] = all_schools
       site.data['school_by_do'] = by_do
+      sched = MealUtil.load_json(site, '_rawdata/schedule.json')
+      site.data['schedule'] = sched.is_a?(Hash) ? sched : {}
       Jekyll.logger.info "MealGenerator:", "총 #{all_schools.size}개 학교 로드 (#{by_do.size}개 시도)"
     end
   end
@@ -150,6 +152,12 @@ module Jekyll
       self.data.merge!(s)
       self.data['mealsByMonth'] = month_list.map { |ym| { 'ym' => ym, 'items' => by_month[ym] } }
       self.data['layout'] = 'school'
+      rec = (site.data['schedule'] || {})[s['code']]
+      if rec && rec['ev'] && !rec['ev'].empty? && rec['s'] && !rec['s'].empty?
+        self.data['hasSched'] = true
+        self.data['schedAy'] = rec['ay']
+        self.data['schedTx'] = SchedUtil.texts(rec['s'])
+      end
       self.data['title'] = "#{s['schoolName']} 급식 식단표 — 이번주 메뉴·칼로리 | #{s['doShort']} #{s['sigungu']}"
       cnt = meals.size
       extra = cnt > 0 ? "최근 #{cnt}건의 급식 메뉴와 칼로리 정보를 " : "급식 정보를 "

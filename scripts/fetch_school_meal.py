@@ -27,7 +27,7 @@ DEFAULT_LIMIT = 12700  # 기본은 전체 한 번에 시도 (필요시 --limit�
 
 # 전체 이력(수년치)을 다 저장하면 원산지정보 등으로 용량이 기하급수로 커져서(테스트 결과 학교당
 # 수백KB~1MB) 최근 구간만 유지한다. 매 실행마다 이 구간으로 "교체"되므로 항상 최신 상태 유지.
-FROM_YMD = (date.today() - timedelta(days=60)).strftime("%Y%m%d")
+FROM_YMD = (date.today() - timedelta(days=21)).strftime("%Y%m%d")
 TO_YMD = (date.today() + timedelta(days=75)).strftime("%Y%m%d")
 
 

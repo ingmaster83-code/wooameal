@@ -1,0 +1,96 @@
+---
+layout: default
+---
+<div class="school-hero">
+  <h1 class="s-name" style="margin:0;">{{ page.schoolName }} 학사일정 {{ page.ay }}학년도</h1>
+  <div class="s-addr">{{ page.doShort }} {{ page.sigungu }} · 개학일·여름방학·겨울방학·시험기간·재량휴업일</div>
+  <span class="s-badge">{{ page.kind }}</span>
+</div>
+
+<div class="breadcrumb">
+  <a href="{{ '/' | relative_url }}">홈</a> ›
+  <a href="{{ '/schedule/' | relative_url }}">학사일정</a> ›
+  <a href="{{ '/school/' | relative_url }}{{ page.slug }}/">{{ page.schoolName }}</a> ›
+  <span>학사일정</span>
+</div>
+
+<div class="page-with-sidebar" style="margin-top:20px;">
+<div>
+
+  <div class="ad-slot" style="margin:0 0 20px;text-align:center;">{% include ad.html %}</div>
+
+  <div class="info-panel">
+    <h2>📌 {{ page.schoolName }} 개학일·방학 한눈에</h2>
+    <div class="spec-grid">
+      {% if page.sTexts.open1 %}<div class="spec-item"><div class="spec-label">1학기 개학(시업식)</div><div class="spec-value">{{ page.sTexts.open1 }}</div></div>{% endif %}
+      {% if page.sTexts.summer %}<div class="spec-item" style="grid-column:span 2;"><div class="spec-label">여름방학</div><div class="spec-value">{{ page.sTexts.summer }}</div></div>{% endif %}
+      {% if page.sTexts.open2 %}<div class="spec-item"><div class="spec-label">2학기 개학{% if page.sRaw.open2est %}(추정){% endif %}</div><div class="spec-value">{{ page.sTexts.open2 }}</div></div>{% endif %}
+      {% if page.sTexts.winter %}<div class="spec-item" style="grid-column:span 2;"><div class="spec-label">겨울방학(학년말 방학)</div><div class="spec-value">{{ page.sTexts.winter }}</div></div>{% endif %}
+      {% if page.sTexts.spring %}<div class="spec-item"><div class="spec-label">봄방학</div><div class="spec-value">{{ page.sTexts.spring }}</div></div>{% endif %}
+      {% if page.sTexts.grad %}<div class="spec-item"><div class="spec-label">졸업식</div><div class="spec-value">{{ page.sTexts.grad }}</div></div>{% endif %}
+      {% if page.sTexts.end %}<div class="spec-item"><div class="spec-label">종업식·수료식</div><div class="spec-value">{{ page.sTexts.end }}</div></div>{% endif %}
+    </div>
+    {% unless page.sTexts.summer or page.sTexts.winter or page.sTexts.open1 %}
+    <p style="margin-top:12px;color:var(--text-muted);font-size:.9rem;">이 학교는 방학·개학 일정이 나이스(NEIS)에 등록되어 있지 않습니다. 아래 월별 일정을 참고하세요.</p>
+    {% endunless %}
+  </div>
+
+  {% if page.sTexts.exams.size > 0 %}
+  <div class="info-panel">
+    <h2>📝 {{ page.schoolName }} 시험기간·고사 일정</h2>
+    <div class="sched-wrap"><table class="sched-table">
+      <thead><tr><th>시험</th><th>기간</th></tr></thead>
+      <tbody>
+      {% for e in page.sTexts.exams %}<tr><td>{{ e.name }}</td><td>{{ e.text }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+  </div>
+  {% endif %}
+
+  {% if page.sTexts.disc.size > 0 %}
+  <div class="info-panel">
+    <h2>🏖️ {{ page.schoolName }} 재량휴업일·개교기념일</h2>
+    <p style="line-height:1.8;">{% for x in page.sTexts.disc %}{{ x }}{% unless forloop.last %}, {% endunless %}{% endfor %}</p>
+    <p style="color:var(--text-muted);font-size:.85rem;margin-top:6px;">재량휴업일에는 등교하지 않으며, 학교에 따라 돌봄·방과후 운영 여부가 다릅니다.</p>
+  </div>
+  {% endif %}
+
+  <div class="info-panel">
+    <h2>🗓️ {{ page.schoolName }} 월별 학사일정 전체</h2>
+    {% for m in page.months %}
+    <div class="sched-month">
+      <h3>{{ m.label }}</h3>
+      <ul>
+        {% for it in m.items %}<li><span class="d">{{ it.text }}</span><span class="n">{{ it.name }}</span></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+    <p style="color:var(--text-muted);font-size:.82rem;margin-top:14px;">공휴일은 제외했고, 토요휴업일 {{ page.satCount }}일은 생략했습니다.</p>
+  </div>
+
+  <div class="notice-box" style="margin-top:14px;">
+    💡 본 학사일정은 나이스(NEIS) 교육정보 개방포털에 학교가 등록한 {{ page.ay }}학년도 일정이며, 학교 사정이나 행정 일정에 따라 변경될 수 있습니다. 정확한 일정은 학교 공지로 확인하세요.
+  </div>
+
+  <div class="info-panel" style="margin-top:14px;">
+    <h2>더 보기</h2>
+    <p style="line-height:2;">
+      <a href="{{ '/school/' | relative_url }}{{ page.slug }}/">🍱 {{ page.schoolName }} 급식 식단표</a><br>
+      {% if page.kind == "초등학교" or page.kind == "중학교" or page.kind == "고등학교" %}<a href="{{ '/schedule/' | relative_url }}{{ page.doShort }}/{{ page.sigungu }}/{{ page.kind }}/">📅 {{ page.sigungu }} {{ page.kind }} 방학·개학일 비교</a><br>{% endif %}
+      <a href="{{ '/schedule/' | relative_url }}{{ page.doShort }}/">📅 {{ page.doShort }} 학교 방학·개학일</a>
+    </p>
+  </div>
+
+  {% if page.faq.size > 0 %}
+  <div class="faq-section">
+    <h2>자주 묻는 질문</h2>
+    {% for f in page.faq %}<details><summary>{{ f.q }}</summary><p>{{ f.a }}</p></details>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>
+<aside class="tool-sidebar"></aside>
+</div>

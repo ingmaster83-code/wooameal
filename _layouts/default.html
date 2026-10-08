@@ -8,7 +8,7 @@
   <link rel="canonical" href="{{ page.url | absolute_url }}">
   <meta name="naver-site-verification" content="f53e7f352c7ba1f65fa7511da82d52fb044732e0" />
 
-  {% if page.layout == 'school' or page.layout == 'sigungu' or page.layout == 'do' %}
+  {% if page.layout == 'school' or page.layout == 'sigungu' or page.layout == 'do' or page.layout == 'schedule' or page.layout == 'schedule_hub' or page.layout == 'schedule_do' or page.layout == 'schedule_index' %}
   <meta property="og:type" content="article">
   <meta property="og:title" content="{{ page.title }} | 우아급식">
   <meta property="og:description" content="{{ page.description }}">
@@ -43,6 +43,7 @@
     </a>
     <nav class="header-nav">
       <a href="{{ '/region/' | relative_url }}">지역별</a>
+      <a href="{{ '/schedule/' | relative_url }}">학사일정</a>
       <a href="{{ '/' | relative_url }}#search">검색</a>
       <a href="https://wooahouse.com">WooaHouse →</a>
     </nav>
@@ -52,7 +53,7 @@
 <script src="{{ '/assets/js/wooa-sites-bar.js' | relative_url }}"></script>
 <script src="{{ '/assets/js/ad-dev-placeholder.js' | relative_url }}"></script>
 
-{% unless page.layout == 'school' or page.layout == 'sigungu' or page.layout == 'do' or page.url == '/' %}
+{% unless page.layout == 'school' or page.layout == 'sigungu' or page.layout == 'do' or page.layout == 'schedule' or page.layout == 'schedule_hub' or page.layout == 'schedule_do' or page.layout == 'schedule_index' or page.url == '/' %}
 <div class="top-ad-bar">
   {% include ad.html %}
 </div>

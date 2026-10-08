@@ -1,0 +1,72 @@
+---
+layout: default
+---
+<div class="hero" style="padding:40px 20px 32px;">
+  <h1 style="font-size:1.6rem;">{{ page.doShort }} {{ page.sigungu }} {{ page.level }}<br><span class="accent">방학·개학일 {{ page.ay }}학년도</span></h1>
+  <p>총 {{ page.count }}개교 · 여름방학·2학기 개학·겨울방학 학교별 비교</p>
+</div>
+
+<div class="breadcrumb">
+  <a href="{{ '/' | relative_url }}">홈</a> ›
+  <a href="{{ '/schedule/' | relative_url }}">학사일정</a> ›
+  <a href="{{ '/schedule/' | relative_url }}{{ page.doShort }}/">{{ page.doShort }}</a> ›
+  <span>{{ page.sigungu }} {{ page.level }}</span>
+</div>
+
+<div class="section">
+
+  {% if page.summerPhrase %}
+  <div class="info-panel" style="margin-bottom:16px;">
+    <h2>📌 {{ page.sigungu }} {{ page.level }} 방학 일정 요약</h2>
+    <p style="line-height:1.9;">
+      <strong>여름방학</strong>은 {{ page.summerPhrase }}.
+      {% if page.open2Phrase %}<strong>2학기 개학일</strong>은 {{ page.open2Phrase }}입니다. {% endif %}{% if page.winterPhrase %}<strong>겨울방학(학년말 방학)</strong>은 {{ page.winterPhrase }}.{% endif %}
+      학교마다 며칠씩 다를 수 있으니 아래 표에서 학교를 찾아 확인하세요.
+    </p>
+  </div>
+  {% endif %}
+
+  <div class="filter-bar">
+    <input type="text" class="filter-input" id="schoolFilter" placeholder="🔍 학교명으로 찾기 (예: 한강{{ page.level }})">
+  </div>
+
+  <div class="ad-slot" style="margin:0 0 20px;text-align:center;">{% include ad.html %}</div>
+
+  <div class="sched-wrap"><table class="sched-table" id="schedTable">
+    <thead><tr><th>학교</th><th>여름방학</th><th>2학기 개학</th><th>겨울방학</th></tr></thead>
+    <tbody>
+    {% for r in page.rows %}<tr data-name="{{ r.name }}"><td><a href="{{ '/school/' | relative_url }}{{ r.slug }}/schedule/">{{ r.name }}</a></td><td>{{ r.summer | default: '-' }}</td><td>{{ r.open2 | default: '-' }}{% if r.open2est %}<small>(추정)</small>{% endif %}</td><td>{{ r.winter | default: '-' }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  <p id="noResult" style="display:none;text-align:center;color:var(--text-muted);padding:30px 0;">검색 결과가 없어요.</p>
+  <p style="color:var(--text-muted);font-size:.82rem;margin-top:10px;">날짜는 월.일 형식입니다. 나이스(NEIS)에 학교가 등록한 {{ page.ay }}학년도 일정 기준이며 학교 사정에 따라 변경될 수 있습니다.</p>
+
+  {% if page.faq.size > 0 %}
+  <div class="faq-section" style="margin-top:28px;">
+    <h2>자주 묻는 질문</h2>
+    {% for f in page.faq %}<details><summary>{{ f.q }}</summary><p>{{ f.a }}</p></details>
+    {% endfor %}
+  </div>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{% for f in page.faq %}{"@type":"Question","name":{{ f.q | jsonify }},"acceptedAnswer":{"@type":"Answer","text":{{ f.a | jsonify }}}}{% unless forloop.last %},{% endunless %}{% endfor %}]}</script>
+  {% endif %}
+
+  <p style="margin-top:24px;font-size:.92rem;"><a href="{{ '/region/' | relative_url }}{{ page.doShort }}/{{ page.sigungu }}/">🍱 {{ page.sigungu }} 학교 급식 식단표 보기 →</a></p>
+</div>
+
+<script>
+(function(){
+  var input = document.getElementById('schoolFilter');
+  var rows = document.querySelectorAll('#schedTable tbody tr');
+  var noResult = document.getElementById('noResult');
+  input.addEventListener('input', function(){
+    var q = input.value.trim().toLowerCase(), visible = 0;
+    rows.forEach(function(r){
+      var m = r.getAttribute('data-name').toLowerCase().indexOf(q) !== -1;
+      r.style.display = m ? '' : 'none';
+      if (m) visible++;
+    });
+    noResult.style.display = visible === 0 ? 'block' : 'none';
+  });
+})();
+</script>

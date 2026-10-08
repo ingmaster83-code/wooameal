@@ -74,6 +74,19 @@ layout: default
     {% endif %}
   </div>
 
+  {% if page.hasSched %}
+  <div class="info-panel" id="schedule">
+    <h2>📅 {{ page.schoolName }} 학사일정 {{ page.schedAy }}학년도</h2>
+    <div class="spec-grid">
+      {% if page.schedTx.open1 %}<div class="spec-item"><div class="spec-label">1학기 개학</div><div class="spec-value">{{ page.schedTx.open1 }}</div></div>{% endif %}
+      {% if page.schedTx.summer %}<div class="spec-item" style="grid-column:span 2;"><div class="spec-label">여름방학</div><div class="spec-value">{{ page.schedTx.summer }}</div></div>{% endif %}
+      {% if page.schedTx.open2 %}<div class="spec-item"><div class="spec-label">2학기 개학</div><div class="spec-value">{{ page.schedTx.open2 }}</div></div>{% endif %}
+      {% if page.schedTx.winter %}<div class="spec-item" style="grid-column:span 2;"><div class="spec-label">겨울방학</div><div class="spec-value">{{ page.schedTx.winter }}</div></div>{% endif %}
+    </div>
+    <p style="margin-top:14px;"><a href="{{ '/school/' | relative_url }}{{ page.slug }}/schedule/">📅 {{ page.schoolName }} 시험기간·재량휴업일·월별 학사일정 전체 보기 →</a></p>
+  </div>
+  {% endif %}
+
   <div class="info-panel">
     <h2>🏫 학교 기본정보</h2>
     <div class="spec-grid">

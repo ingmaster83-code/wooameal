@@ -1,0 +1,29 @@
+---
+layout: default
+---
+<div class="hero" style="padding:40px 20px 32px;">
+  <h1 style="font-size:1.6rem;">{{ page.doShort }} 학교<br><span class="accent">방학·개학일 {{ page.ay }}학년도</span></h1>
+  <p>초등학교·중학교·고등학교 {{ page.total }}곳 · 시군구를 선택하세요</p>
+</div>
+
+<div class="breadcrumb">
+  <a href="{{ '/' | relative_url }}">홈</a> ›
+  <a href="{{ '/schedule/' | relative_url }}">학사일정</a> ›
+  <span>{{ page.doShort }}</span>
+</div>
+
+<div class="section">
+  <div class="ad-slot" style="margin:0 0 20px;text-align:center;">{% include ad.html %}</div>
+
+  {% for g in page.byLevel %}{% if g.items.size > 0 %}
+  <h2 style="font-size:1.1rem;margin:22px 0 10px;">{{ page.doShort }} {{ g.level }} 방학·개학일</h2>
+  <div class="region-grid">
+    {% for it in g.items %}<a class="region-btn" href="{{ '/schedule/' | relative_url }}{{ page.doShort }}/{{ it.sigungu }}/{{ g.level }}/">{{ it.sigungu }} <span style="color:var(--text-muted);font-size:.8rem;">({{ it.count }})</span></a>
+    {% endfor %}
+  </div>
+  {% endif %}{% endfor %}
+
+  <div class="notice-box" style="margin-top:28px;">
+    💡 {{ page.doShort }} 학교의 {{ page.ay }}학년도 여름방학·2학기 개학일·겨울방학 일정입니다. 학교마다 며칠씩 다를 수 있어 시군구를 선택해 학교별 날짜를 비교하세요.
+  </div>
+</div>

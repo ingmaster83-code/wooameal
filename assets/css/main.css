@@ -186,3 +186,18 @@ img { max-width: 100%; height: auto; }
 .ad-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,.08); border: 1.5px dashed #e5e7eb; padding: 14px; display: flex; flex-direction: column; align-items: center; min-height: 280px; margin-bottom: 16px; }
 @media (max-width: 1024px) { .page-with-sidebar { grid-template-columns: 1fr; } .tool-sidebar { display: none; } }
 .ad-placeholder { background: #F1F5F9; border: 1px dashed #CBD5E1; border-radius: 6px; color: #94A3B8; font-size: .82rem; padding: 14px; text-align: center; }
+
+
+/* 학사일정 */
+.sched-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.sched-table th,.sched-table td{padding:9px 8px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+.sched-table th{background:#F8FAFC;font-weight:700;font-size:.8rem;color:var(--text-muted)}
+.sched-table td a{font-weight:700}
+.sched-wrap{overflow-x:auto}
+.sched-month h3{font-size:.98rem;margin:18px 0 8px}
+.sched-month ul{list-style:none;margin:0;padding:0}
+.sched-month li{display:flex;gap:10px;padding:7px 0;border-bottom:1px dashed var(--border);font-size:.88rem}
+.sched-month li .d{flex:0 0 120px;color:var(--text-muted)}
+.sched-month li .n{font-weight:600}
+.faq-q{font-weight:700;margin:14px 0 4px}
+@media(max-width:640px){.sched-month li{flex-direction:column;gap:2px}.sched-month li .d{flex:none}}
