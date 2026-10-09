@@ -201,3 +201,8 @@ img { max-width: 100%; height: auto; }
 .sched-month li .n{font-weight:600}
 .faq-q{font-weight:700;margin:14px 0 4px}
 @media(max-width:640px){.sched-month li{flex-direction:column;gap:2px}.sched-month li .d{flex:none}}
+
+/* 사이드바 래퍼 안의 본문 블록은 열 너비에 맞춘다 */
+.page-with-sidebar > .side-main { min-width: 0; }
+.page-with-sidebar > .side-main > * { max-width: none; margin-left: 0; margin-right: 0; }
+.page-with-sidebar > .side-main > .section { padding-left: 0; padding-right: 0; }
