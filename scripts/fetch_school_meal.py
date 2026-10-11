@@ -13,13 +13,18 @@ import json, os, sys, time, argparse
 from datetime import date, timedelta
 import requests
 
+def _need_key():
+    import os, sys
+    return os.environ.get("NEIS_API_KEY") or sys.exit("환경변수 NEIS_API_KEY 가 필요합니다(키를 코드에 넣지 마세요).")
+
+
 sys.stdout.reconfigure(encoding="utf-8")
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW_LIST = os.path.join(ROOT, "_rawdata", "school_list_raw.json")
 DETAIL_CACHE = os.path.join(ROOT, "_rawdata", "meal_detail.json")
 
-API_KEY = os.environ.get("NEIS_API_KEY") or "3d2634b6a79249e4b7a773a27b705cec"
+API_KEY = os.environ.get("NEIS_API_KEY") or _need_key()
 BASE = "https://open.neis.go.kr/hub/mealServiceDietInfo"
 PAGE_SIZE = 1000
 
