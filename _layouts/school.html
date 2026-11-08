@@ -87,6 +87,17 @@ layout: default
   </div>
   {% endif %}
 
+  {% if page.hasClass %}
+  <div class="info-panel">
+    <h2>📚 {{ page.schoolName }} 학급 수 ({{ page.classAy }}학년도)</h2>
+    <p style="margin-bottom:12px;">{{ page.classAy }}학년도 기준 {{ page.schoolName }}의 학급은 <b>총 {{ page.classTotal }}학급</b>{% if page.classNight > 0 %}(주간 {{ page.classDay }}학급, 야간 {{ page.classNight }}학급){% endif %}입니다. 학년마다 평균 약 {{ page.classAvg }}학급입니다.</p>
+    <div class="spec-grid">
+      {% for r in page.classRows %}<div class="spec-item"><div class="spec-label">{{ r.g }}</div><div class="spec-value">{{ r.n }}학급</div></div>{% endfor %}
+    </div>
+    <p style="margin-top:10px;font-size:.8rem;color:var(--text-muted);">※ 나이스(NEIS) 학급정보 기준이며 학생 수는 제공되지 않습니다. 학급 수는 학기 중 변동될 수 있어요.</p>
+  </div>
+  {% endif %}
+
   <div class="info-panel">
     <h2>🏫 학교 기본정보</h2>
     <div class="spec-grid">

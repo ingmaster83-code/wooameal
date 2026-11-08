@@ -19,6 +19,7 @@ sys.stdout.reconfigure(encoding="utf-8")
 ROOT = Path(__file__).parent.parent
 RAW_LIST = ROOT / "_rawdata" / "school_list_raw.json"
 RAW_MEAL = ROOT / "_rawdata" / "meal_detail.json"
+RAW_CLASS = ROOT / "_rawdata" / "class_info.json"
 # 페이지 용량(GitHub Pages 1GB 한도) 때문에 과거 급식은 최근 21일만 노출 (오늘·이번주 검색이 대부분)
 from datetime import date, timedelta
 MEAL_KEEP_FROM = (date.today() - timedelta(days=21)).strftime("%Y%m%d")
@@ -68,6 +69,17 @@ def slugify(text: str, extra: str) -> str:
     return f"{slug}-{h}" if slug else h
 
 
+def class_fields(c):
+    """class_info.json 학교 1건 -> 학년별 학급 수 표시 필드(주간 기준, 야간 학급은 별도)."""
+    if not c or not (c.get("d") or c.get("n")):
+        return {"hasClass": False}
+    d = c.get("d") or {}
+    rows = [{"g": f"{g}학년", "n": n} for g, n in sorted(d.items(), key=lambda t: int(t[0]) if str(t[0]).isdigit() else 99)]
+    total = sum(d.values()); night = sum((c.get("n") or {}).values())
+    return {"hasClass": True, "classAy": c.get("ay"), "classTotal": total + night, "classDay": total, "classNight": night, "classRows": rows,
+            "classAvg": round(total / len(d), 1) if d else 0}
+
+
 def main():
     raw = json.loads(RAW_LIST.read_text(encoding="utf-8"))
     meal_map = {}
@@ -75,6 +87,8 @@ def main():
         meal_map = json.loads(RAW_MEAL.read_text(encoding="utf-8"))
     print(f"학교 {len(raw)}건, 급식정보 확보 {len(meal_map)}건 ({len(meal_map)*100//max(len(raw),1)}%)")
 
+    class_map = json.loads(RAW_CLASS.read_text(encoding="utf-8")) if RAW_CLASS.exists() else {}
+    print(f"학급정보 확보 {len(class_map)}건")
     schools = []
     seen_slugs = Counter()
     skipped = 0
@@ -114,6 +128,7 @@ def main():
             "foundYmd": d.get("FOND_YMD") or "",
             "hasMeal": has_meal,
             "meals": meals or [],
+            **class_fields(class_map.get(code)),
         })
 
     print(f"제외: {skipped}건 (코드/이름/지역 누락)")

@@ -30,6 +30,12 @@ jobs:
         env:
           NEIS_API_KEY: ${{ secrets.NEIS_API_KEY }}
 
+      - name: 학교별 학년별 학급 수 수집 (학년도가 바뀌거나 신규 학교만 새로 받음)
+        run: python scripts/fetch_class_info.py
+        continue-on-error: true
+        env:
+          NEIS_API_KEY: ${{ secrets.NEIS_API_KEY }}
+
       - name: 페이지용 데이터 재생성
         run: python scripts/process_data.py
 
