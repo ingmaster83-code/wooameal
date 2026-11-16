@@ -45,6 +45,7 @@ layout: default
   <p style="color:var(--text-muted);font-size:.82rem;margin-top:10px;">날짜는 월.일 형식입니다. 나이스(NEIS)에 학교가 등록한 {{ page.ay }}학년도 일정 기준이며 학교 사정에 따라 변경될 수 있습니다.</p>
 
   {% if page.faq.size > 0 %}
+  <div class="ad-slot" style="margin:24px 0;text-align:center;">{% include ad.html slot="1419180025" %}</div> <!-- ad2-2026-11 -->
   <div class="faq-section" style="margin-top:28px;">
     <h2>자주 묻는 질문</h2>
     {% for f in page.faq %}<details><summary>{{ f.q }}</summary><p>{{ f.a }}</p></details>
